@@ -1,3 +1,4 @@
+
 name: Compilar KIM APK
 
 on:
@@ -8,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,15 +20,21 @@ jobs:
           java-version: '17'
 
       - name: Preparar Android
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
 
       - name: Instalar SDK
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
       - name: Extraer proyecto KIM
         run: |
           unzip -q KIM_Android_Cloud_Build*.zip -d source
-          find source -name settings.gradle.kts -print
 
       - name: Compilar APK
         run: |
